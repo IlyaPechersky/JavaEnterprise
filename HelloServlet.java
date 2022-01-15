@@ -2,6 +2,8 @@ package com.example.demo2;
 
 import java.io.*;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
@@ -13,7 +15,10 @@ public class HelloServlet extends HttpServlet {
         message = "Hello World!";
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        String name = request.getParameter("name");
+        if (name != null) message = "Hello, " + name + "!";
+
         response.setContentType("text/html");
 
         // Hello
@@ -21,6 +26,12 @@ public class HelloServlet extends HttpServlet {
         out.println("<html><body>");
         out.println("<h1>" + message + "</h1>");
         out.println("</body></html>");
+
+//        response.sendRedirect("/hello-jsp?name=" + name);
+//        response.sendRedirect("https://www.google.com");
+
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("/hello-jsp?name=" + name);
+        requestDispatcher.forward(request, response);
     }
 
     public void destroy() {
